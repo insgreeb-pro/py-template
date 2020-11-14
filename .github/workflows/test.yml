@@ -6,13 +6,16 @@ on:
     branches: [main]
 
 jobs:
-  scrap:
+  test:
     runs-on: ubuntu-latest
     name: Test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        name: Setup Python
         with:
           python-version: "3.x"
       - run: pip install --upgrade pip && pip install -r requirements.txt
+        name: Install Dependency
       - run: python app.py
+        name: Running Program
