@@ -3,7 +3,7 @@ name: Running
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   scrap:
