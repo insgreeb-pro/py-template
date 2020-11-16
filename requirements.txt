@@ -1,1 +1,3 @@
-numpy
+pickel
+json
+dateutil
