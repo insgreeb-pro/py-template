@@ -10,6 +10,7 @@ import json
 from dateutil import parser
 import os.path
 
+from helper import downloader
 
 #Load model ke server lokal
 '''
@@ -24,9 +25,14 @@ with open('r33_model_penerimaan.pkl', 'rb') as penerimaan:
     model_RF_penerimaan = pickle.load(penerimaan)
 '''
 
-    
+ID_RUANG: int = 2
+
 # memasukkan dataset
-data = json.loads("".join(open('prediction.json').readlines()))
+# data = json.loads("".join(open('prediction.json').readlines()))
+data = json.loads(
+    downloader.dataset(ID_RUANG)
+)
+
 data_asal = json.loads("".join(open('daerah.json').readlines()))
 
   
