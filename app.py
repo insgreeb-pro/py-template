@@ -16,7 +16,7 @@ from helper import downloader
 def main(data, model):
     # data = json.loads("".join(open('prediction.json').readlines()))
     status_nyaman = ''
-    data_asal = json.loads("".join(open('daerah.json').readlines()))
+    data_asal = json.loads("".join(open('assets/daerah.json').readlines()))
 
     # Atur data untuk prediksi sensasi duluu
     # fitur_sensasi = ['usia','kelamin','tinggi','berat','jilbab','ac','durasi_ac',
@@ -208,9 +208,9 @@ if __name__ == '__main__':
     data = json.loads(
         downloader.dataset(ID_RUANG)
     )
-    data2 = json.loads("".join(open('prediction.json').readlines()))
+    data2 = json.loads("".join(open('assets/prediction.json').readlines()))
 
-    with open("r33.pkl", 'rb') as sensasi:
+    with open("assets/r33.pkl", 'rb') as sensasi:
         model = pickle.load(sensasi)
 
         print("\n\n", "-"*50)
