@@ -13,7 +13,6 @@ from dateutil import parser
 from helper import downloader
 
 
-
 def main(data, model):
     # data = json.loads("".join(open('prediction.json').readlines()))
     status_nyaman = ''
@@ -175,22 +174,22 @@ def main(data, model):
         print('Prediksi sensasi = ', prediksi_sensasi)
         print('Prediksi kenyamanan = ', prediksi_kenyamanan)
         print('Prediksi penerimaan = ', prediksi_penerimaan)
-        
-        #Output akhir untuk thermal comfort level satu ruang
-        #Parameter : Kenyamanan dan Penerimaan
-        
-        #Hitung berapa persen yang nyaman (sementara pake penerimaan dulu)
-        #percentage_nyaman=(prediksi_kenyamanan.count(1)/len(prediksi_kenyamanan))*100
-        percentage_penerimaan=(prediksi_penerimaan.count(1)/len(prediksi_penerimaan))*100
-        
-        if percentage_penerimaan>=80:
-            status_nyaman = "Nyaman (%.2f %%)" %(percentage_penerimaan)
-        elif 60<=percentage_penerimaan<80:
-            status_nyaman = "Netral (%.2f %%)" %(percentage_penerimaan)
-        elif percentage_penerimaan<60:
-            status_nyaman = "Tidak nyaman (%.2f %%)" %(percentage_penerimaan)
-        print("Status = ",status_nyaman)
-        
+
+        # Output akhir untuk thermal comfort level satu ruang
+        # Parameter : Kenyamanan dan Penerimaan
+
+        # Hitung berapa persen yang nyaman (sementara pake penerimaan dulu)
+        # percentage_nyaman=(prediksi_kenyamanan.count(1)/len(prediksi_kenyamanan))*100
+        percentage_penerimaan = (prediksi_penerimaan.count(
+            1)/len(prediksi_penerimaan))*100
+
+        if percentage_penerimaan >= 80:
+            status_nyaman = "Nyaman (%.2f %%)" % (percentage_penerimaan)
+        elif 60 <= percentage_penerimaan < 80:
+            status_nyaman = "Netral (%.2f %%)" % (percentage_penerimaan)
+        elif percentage_penerimaan < 60:
+            status_nyaman = "Tidak nyaman (%.2f %%)" % (percentage_penerimaan)
+        print("Status = ", status_nyaman)
 
     elif status_personal or status_indoor or status_outdoor != 1 and status_model == True:
         print('Data kosong')
@@ -198,7 +197,9 @@ def main(data, model):
     elif status_personal and status_indoor and status_outdoor == 1 and status_model == False:
         print('Model tidak ditemukan')
 
-    return prediksi_sensasi,prediksi_kenyamanan, prediksi_penerimaan, status_nyaman
+    return prediksi_sensasi, prediksi_kenyamanan, prediksi_penerimaan, status_nyaman
+
+
 if __name__ == '__main__':
 
     ID_RUANG: int = 2
