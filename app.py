@@ -197,7 +197,12 @@ def main(data, model):
     elif status_personal and status_indoor and status_outdoor == 1 and status_model == False:
         print('Model tidak ditemukan')
 
-    return prediksi_sensasi, prediksi_kenyamanan, prediksi_penerimaan, status_nyaman
+    return {
+        "sensasi": prediksi_sensasi,
+        "kenyamanan": prediksi_kenyamanan,
+        "penerimaan": prediksi_penerimaan,
+        "status": status_nyaman
+    }, status_nyaman
 
 
 if __name__ == '__main__':
@@ -215,7 +220,11 @@ if __name__ == '__main__':
 
         print("\n\n", "-"*50)
         print("Data dari api server:")
-        main(data, model)
+
+        hasil = main(data, model)
+        print(hasil)
+
         print("\n\n", "-"*50)
         print("Data dari prediction.json")
-        main(data2, model)
+        hasil = main(data2, model)
+        print(hasil)
