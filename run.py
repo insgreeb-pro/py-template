@@ -1,3 +1,4 @@
+from helper.db import save_to_db
 from helper.downloader import model
 import json
 import sched
@@ -25,8 +26,8 @@ if __name__ == "__main__":
         data = json.loads(
             downloader.dataset(int(ID_RUANG))
         )
-        hasil = app.main(data, model)
-        print(hasil)
+        data_output, status = app.main(data, model)
+        save_to_db(ID_TASK, status, data, data_output)
 
     # SECHEDULER
     s = sched.scheduler(time.time, time.sleep)
