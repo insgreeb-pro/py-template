@@ -45,6 +45,7 @@ def main(data, model):
     prediksi_sensasi = []
     prediksi_kenyamanan = []
     prediksi_penerimaan = []
+    count_data_excluded = 0
 
     if status_personal and status_indoor and status_outdoor == 1 and status_model == True:
         # Siapin model
@@ -172,21 +173,21 @@ def main(data, model):
 
                 output_penerimaan = int(
                     model_penerimaan.predict([data_prediksi_penerimaan]))
+                
+                # Masukin buat output akhir
+                prediksi_sensasi.append(output_sensasi)
+                prediksi_kenyamanan.append(output_kenyamanan)
+                prediksi_penerimaan.append(output_penerimaan)
 
             # Yang datanya None, outputnya None juga
             elif cek_none_personal or cek_none_latar == True:
-                output_sensasi = None
-                output_kenyamanan = None
-                output_penerimaan = None
-
-            # Masukin buat output akhir
-            prediksi_sensasi.append(output_sensasi)
-            prediksi_kenyamanan.append(output_kenyamanan)
-            prediksi_penerimaan.append(output_penerimaan)
+                count_data_excluded +=1
+            
 
         print('Prediksi sensasi = ', prediksi_sensasi)
         print('Prediksi kenyamanan = ', prediksi_kenyamanan)
         print('Prediksi penerimaan = ', prediksi_penerimaan)
+        print('Total',count_data_excluded, 'data excluded')
 
         # Output akhir untuk thermal comfort level satu ruang
         # Parameter : Kenyamanan dan Penerimaan
