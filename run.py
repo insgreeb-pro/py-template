@@ -1,3 +1,4 @@
+import pickle
 from helper.env import TELEGRAM_CHANNEL, TELEGRAM_TOKEN
 from helper import telegram
 from helper.db import save_to_db
@@ -22,7 +23,9 @@ TIME_DELAY = 1  # minutes
 if __name__ == "__main__":
     _, ID_TASK, ID_RUANG, ID_MODEL = argv
     try:
-        model = downloader.model(ID_MODEL)
+        model = pickle.loads(
+            downloader.model(ID_MODEL)
+        )
 
         def run():
             data = json.loads(
