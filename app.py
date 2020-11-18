@@ -137,6 +137,8 @@ def main(data, model):
             berat = data_personal_satu['berat']
 
             data_personal = [usia, kelamin, tinggi, berat, konstanta_termal]
+            #KHUSUS KALO ADA YANG GA NGISI BIODATA
+            cek_none_personal = any(x is None for x in data_personal)
 
             # Latar belakangac,durasi_ac,durasi_kipas,asal,lama_dijogja
             durasi_ac = data_personal_satu['durasi_ac']
@@ -145,28 +147,36 @@ def main(data, model):
 
             data_latar_belakang = [ac, durasi_ac,
                                    durasi_kipas, daerah, lama_dijogja]
+            #KHUSUS KALO ADA YANG GA NGISI BIODATA
+            cek_none_latar = any(x is None for x in data_latar_belakang)
 
-            # Prediksi per orang yang ada di ruangann
-
-            # Prediksi sensasi termal
-            data_prediksi_sensasi = data_personal + \
-                data_latar_belakang+sensor_indoor+sensor_outdoor
-
-            output_sensasi = int(
-                model_sensasi.predict([data_prediksi_sensasi]))
-
-            # Prediksi kenyamanan termal
-            data_prediksi_kenyamanan = data_personal+[output_sensasi]
-
-            output_kenyamanan = int(
-                model_kenyamanan.predict([data_prediksi_kenyamanan]))
-
-            # Prediksi penerimaan termal
-            data_prediksi_penerimaan = data_personal + \
-                [output_sensasi]+[output_kenyamanan]
-
-            output_penerimaan = int(
-                model_penerimaan.predict([data_prediksi_penerimaan]))
+            # Prediksi per orang yang ada di ruangan khusus yang ada datanya saja
+            if cek_none_personal == False and cek_none_latar == False:
+                # Prediksi sensasi termal
+                data_prediksi_sensasi = data_personal + \
+                    data_latar_belakang+sensor_indoor+sensor_outdoor
+    
+                output_sensasi = int(
+                    model_sensasi.predict([data_prediksi_sensasi]))
+    
+                # Prediksi kenyamanan termal
+                data_prediksi_kenyamanan = data_personal+[output_sensasi]
+    
+                output_kenyamanan = int(
+                    model_kenyamanan.predict([data_prediksi_kenyamanan]))
+    
+                # Prediksi penerimaan termal
+                data_prediksi_penerimaan = data_personal + \
+                    [output_sensasi]+[output_kenyamanan]
+    
+                output_penerimaan = int(
+                    model_penerimaan.predict([data_prediksi_penerimaan]))
+            
+            #Yang datanya None, outputnya None juga
+            elif cek_none_personal or cek_none_latar == True:
+                output_sensasi = None
+                output_kenyamanan = None
+                output_penerimaan = None
 
             # Masukin buat output akhir
             prediksi_sensasi.append(output_sensasi)
