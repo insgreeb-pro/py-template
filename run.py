@@ -1,3 +1,4 @@
+from os import name
 import pickle
 from helper.env import TELEGRAM_CHANNEL, TELEGRAM_TOKEN
 from helper import telegram, db
@@ -17,6 +18,7 @@ python run.py 1 2 7
 """
 
 TIME_DELAY = 5  # minutes
+data_input = {}
 
 if __name__ == "__main__":
     _, ID_TASK, ID_RUANG, ID_MODEL = argv
@@ -26,11 +28,14 @@ if __name__ == "__main__":
         )
 
         def run():
-            data = json.loads(
+            global data_input
+            data_input = json.loads(
                 downloader.dataset(int(ID_RUANG))
             )
-            data_output, status = app.main(data, model)
-            db.save_to_db(ID_TASK, status, data, data_output)
+            data_output, status = app.main(data_input, model)
+            db.save_to_db(ID_TASK, status, data_input, data_output)
+
+        run()  # first running
 
         # Secheduller
         schedule.every(TIME_DELAY).minutes.do(run)
@@ -41,6 +46,5 @@ if __name__ == "__main__":
     except Exception as e:
         # Error Notification
         msg = telegram.msg_generator(ID_TASK, e)
-        telegram.push(
-            msg, TELEGRAM_TOKEN, TELEGRAM_CHANNEL
-        )
+        telegram.push(msg)
+        telegram.sendFile(json.dumps(data_input), name="input_data.json")
