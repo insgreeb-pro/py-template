@@ -1,4 +1,5 @@
 # import pandas as pd
+import glob
 import pickle
 # from sklearn.model_selection import train_test_split
 # from sklearn.ensemble import RandomForestClassifier
@@ -116,9 +117,9 @@ def main(data, model):
             laki = [0, 0.6, 0.6, 0.54, 0.54, 0.65, 0.65]
             perempuan_tanpajilbab = [0, 0.59, 0.59, 0.53, 0.53, 0.64, 0.64]
             perempuan_berjilbab = [0, 0.73, 0.73, 0.64, 0.64, 0.82, 0.82]
-            
-            konstanta_termal=0
-            
+
+            konstanta_termal = 0
+
             if kelamin == 0:  # Jika laki"
                 konstanta_termal = laki[no_hari]
 
@@ -137,7 +138,7 @@ def main(data, model):
             berat = data_personal_satu['berat']
 
             data_personal = [usia, kelamin, tinggi, berat, konstanta_termal]
-            #KHUSUS KALO ADA YANG GA NGISI BIODATA
+            # KHUSUS KALO ADA YANG GA NGISI BIODATA
             cek_none_personal = any(x is None for x in data_personal)
 
             # Latar belakangac,durasi_ac,durasi_kipas,asal,lama_dijogja
@@ -147,7 +148,7 @@ def main(data, model):
 
             data_latar_belakang = [ac, durasi_ac,
                                    durasi_kipas, daerah, lama_dijogja]
-            #KHUSUS KALO ADA YANG GA NGISI BIODATA
+            # KHUSUS KALO ADA YANG GA NGISI BIODATA
             cek_none_latar = any(x is None for x in data_latar_belakang)
 
             # Prediksi per orang yang ada di ruangan khusus yang ada datanya saja
@@ -155,24 +156,24 @@ def main(data, model):
                 # Prediksi sensasi termal
                 data_prediksi_sensasi = data_personal + \
                     data_latar_belakang+sensor_indoor+sensor_outdoor
-    
+
                 output_sensasi = int(
                     model_sensasi.predict([data_prediksi_sensasi]))
-    
+
                 # Prediksi kenyamanan termal
                 data_prediksi_kenyamanan = data_personal+[output_sensasi]
-    
+
                 output_kenyamanan = int(
                     model_kenyamanan.predict([data_prediksi_kenyamanan]))
-    
+
                 # Prediksi penerimaan termal
                 data_prediksi_penerimaan = data_personal + \
                     [output_sensasi]+[output_kenyamanan]
-    
+
                 output_penerimaan = int(
                     model_penerimaan.predict([data_prediksi_penerimaan]))
-            
-            #Yang datanya None, outputnya None juga
+
+            # Yang datanya None, outputnya None juga
             elif cek_none_personal or cek_none_latar == True:
                 output_sensasi = None
                 output_kenyamanan = None
@@ -221,22 +222,23 @@ if __name__ == '__main__':
 
     ID_RUANG: int = 2
 
-    # memasukkan dataset
     data = json.loads(
         downloader.dataset(ID_RUANG)
     )
-    data2 = json.loads("".join(open('assets/prediction.json').readlines()))
 
     with open("assets/r33.pkl", 'rb') as sensasi:
         model = pickle.load(sensasi)
 
-        print("\n\n", "-"*50)
+        print("-" * 50)
         print("Data dari api server:")
+        main(data, model)
 
-        hasil = main(data, model)
-        print(hasil)
-
-        print("\n\n", "-"*50)
-        print("Data dari prediction.json")
-        hasil = main(data2, model)
-        print(hasil)
+        # Test Multiple Prediction File
+        import glob
+        data_paths = glob.glob("assets/prediction*.json")
+        for data_path in data_paths:
+            print("-"*50)
+            print("Data dari:", data_path)
+            with open(data_path) as d:
+                data = json.load(d)
+                main(data, model)
