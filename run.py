@@ -1,7 +1,8 @@
-from helper.db import save_to_db
-from helper.downloader import model
+import pickle
+from helper.env import TELEGRAM_CHANNEL, TELEGRAM_TOKEN
+from helper import telegram, db
 import json
-import sched
+import schedule
 import time
 from sys import argv
 from helper import downloader
@@ -15,26 +16,31 @@ ex:
 python run.py 1 2 7
 """
 
-TIME_DELAY = 5 * 60
+TIME_DELAY = 5  # minutes
 
 if __name__ == "__main__":
     _, ID_TASK, ID_RUANG, ID_MODEL = argv
-
-    model = downloader.model(ID_MODEL)
-
-    def run():
-        data = json.loads(
-            downloader.dataset(int(ID_RUANG))
+    try:
+        model = pickle.loads(
+            downloader.model(ID_MODEL)
         )
-        data_output, status = app.main(data, model)
-        save_to_db(ID_TASK, status, data, data_output)
 
-    # SECHEDULER
-    s = sched.scheduler(time.time, time.sleep)
+        def run():
+            data = json.loads(
+                downloader.dataset(int(ID_RUANG))
+            )
+            data_output, status = app.main(data, model)
+            db.save_to_db(ID_TASK, status, data, data_output)
 
-    def do_something(sc):
-        run()
-        s.enter(TIME_DELAY, 1, do_something, (sc,))
+        # Secheduller
+        schedule.every(TIME_DELAY).minutes.do(run)
+        while(True):
+            schedule.run_pending()
+            time.sleep(1)
 
-    s.enter(TIME_DELAY, 1, do_something, (s,))
-    s.run()
+    except Exception as e:
+        # Error Notification
+        msg = telegram.msg_generator(ID_TASK, e)
+        telegram.push(
+            msg, TELEGRAM_TOKEN, TELEGRAM_CHANNEL
+        )
