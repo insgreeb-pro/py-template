@@ -60,7 +60,7 @@ def main(data, model):
                            'field4', 'field5', 'field6', 'field7']
         sensor_indoor = []
         for variabel in variabel_indoor:
-            data_indoor = data_sensor_indoor[variabel]
+            data_indoor = float(data_sensor_indoor[variabel])
             sensor_indoor.append(data_indoor)
 
         in_rh, in_co2, in_ta, in_tg, in_ws, in_li = sensor_indoor
@@ -69,7 +69,7 @@ def main(data, model):
         variabel_outdoor = ['field1', 'field2', 'field3', 'field4', 'field5']
         sensor_outdoor = []
         for variabel in variabel_outdoor:
-            data_outdoor = data_sensor_indoor[variabel]
+            data_outdoor = float(data_sensor_indoor[variabel])
             sensor_outdoor.append(data_outdoor)
 
         # windspeed, winddirection, solarpower, humidity, temperature
