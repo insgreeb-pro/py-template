@@ -1,0 +1,31 @@
+{
+    "success": true,
+    "datetime": "2020-11-18 22:30:54",
+    "ruang": "R33",
+    "channel": {
+        "indoor": "Raspi i3 R33",
+        "outdoor": "Outdoor Station"
+    },
+    "data_dasar": [],
+    "data_sensor": {
+        "indoor": {
+            "created_at": "2020-11-18 22:29:38",
+            "timestamp_device": null,
+            "timestamp_server": 1605713387470,
+            "timestamp_db": 1605713387472,
+            "field1": "83.86",
+            "field2": "95.3",
+            "field3": "1043",
+            "field4": "32.1",
+            "field5": "29.125",
+            "field6": "0.0",
+            "field7": "0.0",
+            "field8": null,
+            "field9": null,
+            "field10": null,
+            "field11": null,
+            "field12": null
+        },
+        "outdoor": {}
+    }
+}

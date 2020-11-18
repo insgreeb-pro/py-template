@@ -1,0 +1,14 @@
+{
+    "success": true,
+    "datetime": "2020-11-18 22:30:54",
+    "ruang": "R33",
+    "channel": {
+        "indoor": "Raspi i3 R33",
+        "outdoor": "Outdoor Station"
+    },
+    "data_dasar": [],
+    "data_sensor": {
+        "indoor": {},
+        "outdoor": {}
+    }
+}
