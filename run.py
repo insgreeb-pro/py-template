@@ -18,7 +18,7 @@ ex:
 python run.py 1 2 7
 """
 
-TIME_DELAY = 1  # minutes
+TIME_DELAY = 5  # minutes
 
 if __name__ == "__main__":
     _, ID_TASK, ID_RUANG, ID_MODEL = argv
