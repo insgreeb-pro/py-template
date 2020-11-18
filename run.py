@@ -1,8 +1,6 @@
 import pickle
 from helper.env import TELEGRAM_CHANNEL, TELEGRAM_TOKEN
-from helper import telegram
-from helper.db import save_to_db
-from helper.downloader import model
+from helper import telegram, db
 import json
 import schedule
 import time
@@ -32,7 +30,7 @@ if __name__ == "__main__":
                 downloader.dataset(int(ID_RUANG))
             )
             data_output, status = app.main(data, model)
-            save_to_db(ID_TASK, status, data, data_output)
+            db.save_to_db(ID_TASK, status, data, data_output)
 
         # Secheduller
         schedule.every(TIME_DELAY).minutes.do(run)
