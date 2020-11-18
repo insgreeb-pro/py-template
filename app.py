@@ -116,7 +116,9 @@ def main(data, model):
             laki = [0, 0.6, 0.6, 0.54, 0.54, 0.65, 0.65]
             perempuan_tanpajilbab = [0, 0.59, 0.59, 0.53, 0.53, 0.64, 0.64]
             perempuan_berjilbab = [0, 0.73, 0.73, 0.64, 0.64, 0.82, 0.82]
-
+            
+            konstanta_termal=0
+            
             if kelamin == 0:  # Jika laki"
                 konstanta_termal = laki[no_hari]
 
