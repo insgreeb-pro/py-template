@@ -38,8 +38,8 @@ def main(data, model):
 
     # Cek semua kondisi data input ke model
     status_personal = 1 if len(data_personal) != 0 else 0
-    status_indoor = 1 if len(data_sensor_indoor) else 0
-    status_outdoor = 1 if len(data_sensor_outdoor) else 0
+    status_indoor = 1 if len(data_sensor_indoor)!= 0 else 0
+    status_outdoor = 1 if len(data_sensor_outdoor)!= 0 else 0
 
     # Nampung semua data akhir
     prediksi_sensasi = []
@@ -205,10 +205,10 @@ def main(data, model):
             status_nyaman = "Tidak nyaman (%.2f %%)" % (percentage_penerimaan)
         print("Status = ", status_nyaman)
 
-    elif status_personal or status_indoor or status_outdoor != 1 and status_model == True:
-        print('Data kosong')
+    elif status_personal != 1 or status_indoor != 1 or status_outdoor != 1 and status_model == True:
+        print('No data')
 
-    elif status_personal and status_indoor and status_outdoor == 1 and status_model == False:
+    elif status_personal == 1 and status_indoor == 1 and status_outdoor == 1 and status_model == False:
         print('Model tidak ditemukan')
 
     return {
