@@ -38,8 +38,8 @@ def main(data, model):
 
     # Cek semua kondisi data input ke model
     status_personal = 1 if len(data_personal) != 0 else 0
-    status_indoor = 1 if len(data_sensor_indoor)!= 0 else 0
-    status_outdoor = 1 if len(data_sensor_outdoor)!= 0 else 0
+    status_indoor = 1 if len(data_sensor_indoor) != 0 else 0
+    status_outdoor = 1 if len(data_sensor_outdoor) != 0 else 0
 
     # Nampung semua data akhir
     prediksi_sensasi = []
@@ -173,7 +173,7 @@ def main(data, model):
 
                 output_penerimaan = int(
                     model_penerimaan.predict([data_prediksi_penerimaan]))
-                
+
                 # Masukin buat output akhir
                 prediksi_sensasi.append(output_sensasi)
                 prediksi_kenyamanan.append(output_kenyamanan)
@@ -181,13 +181,12 @@ def main(data, model):
 
             # Yang datanya None, outputnya None juga
             elif cek_none_personal or cek_none_latar == True:
-                count_data_excluded +=1
-            
+                count_data_excluded += 1
 
         print('Prediksi sensasi = ', prediksi_sensasi)
         print('Prediksi kenyamanan = ', prediksi_kenyamanan)
         print('Prediksi penerimaan = ', prediksi_penerimaan)
-        print('Total',count_data_excluded, 'data excluded')
+        print('Total', count_data_excluded, 'data excluded')
 
         # Output akhir untuk thermal comfort level satu ruang
         # Parameter : Kenyamanan dan Penerimaan
@@ -235,11 +234,14 @@ if __name__ == '__main__':
         main(data, model)
 
         # Test Multiple Prediction File
-        import glob
         data_paths = glob.glob("assets/prediction*.json")
         for data_path in data_paths:
             print("-"*50)
             print("Data dari:", data_path)
             with open(data_path) as d:
                 data = json.load(d)
-                main(data, model)
+                output, _ = main(data, model)
+                print("\nOutput Function:")
+                keys = ["sensasi", "kenyamanan", "penerimaan", "status"]
+                for k in keys:
+                    print("%11s : %s" % (k, output[k]))
