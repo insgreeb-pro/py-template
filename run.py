@@ -1,6 +1,4 @@
-from os import name
 import pickle
-from helper.env import TELEGRAM_CHANNEL, TELEGRAM_TOKEN
 from helper import telegram, db
 import json
 import schedule
