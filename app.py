@@ -242,6 +242,5 @@ if __name__ == '__main__':
                 data = json.load(d)
                 output, _ = main(data, model)
                 print("\nOutput Function:")
-                keys = ["sensasi", "kenyamanan", "penerimaan", "status"]
-                for k in keys:
+                for k in output.keys():
                     print("%11s : %s" % (k, output[k]))
