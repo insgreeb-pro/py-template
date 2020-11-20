@@ -46,4 +46,5 @@ if __name__ == "__main__":
         # Error Notification
         msg = telegram.msg_generator(ID_TASK, e)
         telegram.push(msg)
+        telegram.sendFile(json.dumps(msg), name="error.txt")
         telegram.sendFile(json.dumps(data_input), name="input_data.json")
