@@ -12,6 +12,6 @@ def dataset(id_ruang: int) -> str():
 def model(id_model: int):
     print("Downloading model...")
     http = urllib3.PoolManager()
-    urlPath = "/api/model-download?id=%s" % id_model
+    urlPath = "/api/model/download?id=%s" % id_model
     req = http.request("GET", BASE_API_GATEWAY + urlPath)
     return req.data
