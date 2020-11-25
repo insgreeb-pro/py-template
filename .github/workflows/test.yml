@@ -27,4 +27,6 @@ jobs:
       - run: pip install --upgrade pip && pip install -r requirements.txt
         name: Install Dependency
       - run: python app.py
-        name: Running Program
+        name: Running Program app.py
+      - run: python test-app.py
+        name: Running Program test-app.py
