@@ -47,7 +47,7 @@ def main(data, model):
     prediksi_penerimaan = []
     count_data_excluded = 0
 
-    if status_personal and status_indoor and status_outdoor == 1 and status_model == True:
+    if all([status_personal,status_indoor,status_outdoor]) and status_model:
         # Siapin model
         # with open(no_ruang+'.pkl', 'rb') as sensasi:
         #     model = pickle.load(sensasi)
@@ -204,10 +204,10 @@ def main(data, model):
             status_nyaman = "Tidak nyaman (%.2f %%)" % (percentage_penerimaan)
         print("Status = ", status_nyaman)
 
-    elif status_personal != 1 or status_indoor != 1 or status_outdoor != 1 and status_model == True:
+    elif not all([status_personal,status_indoor,status_outdoor]) and status_model:
         print('No data')
 
-    elif status_personal == 1 and status_indoor == 1 and status_outdoor == 1 and status_model == False:
+    elif all([status_personal,status_indoor,status_outdoor]) and not status_model:
         print('Model tidak ditemukan')
 
     return {
