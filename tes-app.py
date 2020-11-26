@@ -16,6 +16,7 @@ from helper import downloader
 
 
 def main(data, model):
+    status_nyaman = ''
     # Ngambil data yang mau diprediksi
     data_personal = data['data_personal']
     data_latar_belakang=data['data_latar_belakang']
