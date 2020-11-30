@@ -74,7 +74,7 @@ def main(data, model):
                 prediksi_penerimaan.append(output_penerimaan)
 
             # Yang datanya None, outputnya None juga
-            elif cek_none_personal or cek_none_latar == True:
+            elif cek_none_personal or cek_none_latar:
                 count_data_excluded += 1
 
         print('Prediksi sensasi = ', prediksi_sensasi)
