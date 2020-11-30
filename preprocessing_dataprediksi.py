@@ -11,20 +11,20 @@ def preprocess(data):
     data_sensor_outdoor = data['data_sensor']['outdoor']
 
 
-    # Cek semua kondisi data input ke model
-    status_personal = 1 if len(data_personal) != 0 else 0
-    status_indoor = 1 if len(data_sensor_indoor) != 0 else 0
-    status_outdoor = 1 if len(data_sensor_outdoor) != 0 else 0
-
+    # Cek semua kondisi data input ke pre-processing
+    status_personal = True if len(data_personal) != 0 else False
+    status_indoor = True if len(data_sensor_indoor) != 0 else False
+    status_outdoor = True if len(data_sensor_outdoor) != 0 else False
+    #print(status_personal,status_indoor,status_outdoor)
     # Nampung semua data akhir
     data_personal_akhir=[]
     data_latar_belakang=[]
     sensor_indoor=[]
     sensor_outdoor=[]
     
-    if status_personal == 1 and status_indoor == 1 and status_outdoor == 1:
-       
-        # Atur data indoor
+    #Preprocess sensor
+    if status_indoor:
+         # Atur data indoor
         # field1 = rhsht, ga dipake(?)
         variabel_indoor = ['field2', 'field3',
                            'field4', 'field5', 'field6', 'field7']
@@ -34,18 +34,26 @@ def preprocess(data):
             sensor_indoor.append(data_indoor)
         #print(sensor_indoor)
         in_rh, in_co2, in_ta, in_tg, in_ws, in_li = sensor_indoor
-
+    
+    elif not status_indoor:
+        pass
+    
+    if status_outdoor:
         # Atur data outdoor
         variabel_outdoor = ['field1', 'field2', 'field3', 'field4', 'field5']
         sensor_outdoor = []
         for variabel in variabel_outdoor:
-            data_outdoor = float(data_sensor_indoor[variabel])
+            data_outdoor = float(data_sensor_outdoor[variabel])
             sensor_outdoor.append(data_outdoor)
 
         # windspeed, winddirection, solarpower, humidity, temperature
         out_ws, out_wd, out_sp, out_rh, out_ta = sensor_outdoor
-
-        datetime = data_sensor_indoor['created_at']  # clo berdasar hari
+    
+    elif not status_outdoor:
+        pass
+        
+    if status_personal:
+        datetime = data['datetime']  # clo berdasar hari
         no_hari = int(parser.parse(datetime).strftime("%w"))
         #print(data_personal)
         for data_personal_satu in data_personal:
@@ -53,27 +61,27 @@ def preprocess(data):
             # Atur data karakteristik, dibikin angka aja karena trainingnya udah dalam bentuk angka juga kan
             # Encoding data - One Hot Encoding
             # Encode untuk ac dan kipas
-            # 3 untuk tidak ac dan tidak kipas
-            # 2 - untuk kipas saja
-            # 1 - untuk ac dan kipas
-            # 0 - untuk ac saja
+            # 0 untuk tidak ac dan tidak kipas
+            # 1 - untuk kipas saja
+            # 2 - untuk ac dan kipas
+            # 3 - untuk ac saja
             ac = data_personal_satu['ac']
             if ac == 'tidak':
-                ac = 3
+                ac = 0
 
             elif ac == 'kipas':
-                ac = 2
-
-            elif ac == 'ac dan kipas':
                 ac = 1
 
+            elif ac == 'ac dan kipas':
+                ac = 2
+
             elif ac == 'ac':
-                ac = 0
+                ac = 3
           
             # Encode untuk jenis kelamin
-            # 0 - untuk laki-laki
-            # 1 - untuk perempuan
-            kelamin = 0 if data_personal_satu['kelamin'] == 'L' else 1
+            # 1 - untuk laki-laki
+            # 2 - untuk perempuan
+            kelamin = 1 if data_personal_satu['kelamin'] == 'L' else 2
 
             # Encode untuk daerah asal, udah ada data dari daerah.json, antara sejuk atau hangat
             # 0 - untuk sejuk
@@ -84,16 +92,18 @@ def preprocess(data):
             # Untuk jilbab, bakal jadi konstanta termal pakaian (bergantung kelamin, jilbab, hari)
 
             # Konstanta insulasi termal berdasarkan ASHRAE, liat di data.xlsx
-            laki = [0, 0.6, 0.6, 0.54, 0.54, 0.65, 0.65]
-            perempuan_tanpajilbab = [0, 0.59, 0.59, 0.53, 0.53, 0.64, 0.64]
-            perempuan_berjilbab = [0, 0.73, 0.73, 0.64, 0.64, 0.82, 0.82]
+            #Urutannya biru putih 3x - batik - pramuka?
+            #Ga ada sampe sabtu kah? Sementara sabtu kasih untuk pramuka
+            laki = [0, 0.58, 0.58, 0.58, 0.51, 0.67, 0.67]
+            perempuan_tanpajilbab = [0, 0.57, 0.57, 0.57, 0.5, 0.66, 0.66]
+            perempuan_berjilbab = [0, 0.94, 0.94, 0.94, 0.87, 1.03, 1.03]
 
             konstanta_termal = 0
 
-            if kelamin == 0:  # Jika laki"
+            if kelamin == 1:  # Jika laki"
                 konstanta_termal = laki[no_hari]
 
-            elif kelamin == 1:  # Jika perempuan
+            elif kelamin == 2:  # Jika perempuan
                 jilbab = data_personal_satu['jilbab']
                 if jilbab == 'ya':
                     konstanta_termal = perempuan_berjilbab[no_hari]
@@ -120,7 +130,7 @@ def preprocess(data):
             data_personal_akhir.append(data_personal_element)
             data_latar_belakang.append(data_latar_belakang_element)
             
-    elif not all([status_personal,status_indoor,status_outdoor]):
+    elif not status_personal:
         pass
 
     return {

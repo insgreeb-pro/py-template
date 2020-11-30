@@ -9,7 +9,7 @@ import pickle
 
 import json
 # from sklearn.preprocessing import LabelEncoder
-from dateutil import parser
+#from dateutil import parser
 # import os.path
 
 from helper import downloader
@@ -25,19 +25,20 @@ def main(data, model):
     status_model = True
 
     # Cek semua kondisi data input ke model
-    status_personal = 1 if len(data_personal) != 0 else 0
-    status_lb = 1 if len(data_latar_belakang) !=0 else 0
-    status_indoor = 1 if len(sensor_indoor) != 0 else 0
-    status_outdoor = 1 if len(sensor_outdoor) != 0 else 0
+    status_personal = True if len(data_personal) != 0 else False
+    status_lb = True if len(data_latar_belakang) !=0 else False
+    status_indoor = True if len(sensor_indoor) != 0 else False
+    status_outdoor = True if len(sensor_outdoor) != 0 else False
     
-    
+    status = [status_personal,status_lb,status_indoor,status_outdoor]
+    #print(data)    
     # Nampung semua data akhir
     prediksi_sensasi = []
     prediksi_kenyamanan = []
     prediksi_penerimaan = []
     count_data_excluded = 0
 
-    if all([status_personal,status_lb,status_indoor,status_outdoor]) and status_model == True:
+    if all(status) and status_model:
         model_sensasi, model_kenyamanan, model_penerimaan = model
 
         data_dasar = list(zip(data_personal,data_latar_belakang))
@@ -97,10 +98,20 @@ def main(data, model):
             status_nyaman = "Tidak nyaman (%.2f %%)" % (percentage_penerimaan)
         print("Status = ", status_nyaman)
 
-    elif not all([status_personal,status_lb,status_indoor,status_outdoor]) and status_model:
-        print('No data')
-
-    elif all([status_personal,status_lb,status_indoor,status_outdoor]) and not status_model:
+    #Jika tidak ada eror di orang dan/sensor
+    elif not all(status) and status_model:
+       
+        error_msg=[i for i in range(len(status)) if status[i] == 0]
+        #print(error_msg)
+        for error in error_msg:
+            if error == 0:        
+                print('No data : Empty room')
+            elif error == 2:
+                print('No data : Indoor sensors')
+            elif error == 3:
+                print('No data : Outdoor sensors')
+                
+    elif all(status) and not status_model:
         print('Model tidak ditemukan')
 
     return {
