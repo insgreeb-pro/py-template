@@ -86,8 +86,16 @@ def preprocess(data):
             # Encode untuk daerah asal, udah ada data dari daerah.json, antara sejuk atau hangat
             # 0 - untuk sejuk
             # 1 - untuk hangat
+            #ini masih belom pake data kecamatan terbaru, soalnya inputnya belomm format kecamatan.
             asal = data_personal_satu['asal']
             daerah = 0 if asal == data_asal["sejuk"] else 1
+            
+            '''
+            #Encode untuk daerah asal, data input rawnya masih asal daerah, belom alamat tinggal di jogjaa
+            #Inputnya udah dikategorikan sama mas wafa dan udah bakal sesuai sama data excel yang skrg kecamatan_dijogja
+            asal = [variable["asal"] for variable in data_bersih]
+            daerah = [(data_asal[data_asal['nama']==item.upper()]['output']) for item in asal]
+            '''
 
             # Untuk jilbab, bakal jadi konstanta termal pakaian (bergantung kelamin, jilbab, hari)
 

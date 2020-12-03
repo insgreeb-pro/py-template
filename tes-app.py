@@ -39,7 +39,8 @@ def main(data, model):
     count_data_excluded = 0
 
     if all(status) and status_model:
-        model_sensasi, model_kenyamanan, model_penerimaan = model
+        model_sensasi, model_kenyamanan, model_penerimaan,scaler = model
+        scaler_sensasi,scaler_kenyamanan,scaler_penerimaan = scaler
 
         data_dasar = list(zip(data_personal,data_latar_belakang))
         for data_personal_satu,data_lb_satu in data_dasar:            
@@ -49,24 +50,48 @@ def main(data, model):
             # Prediksi per orang yang ada di ruangan khusus yang ada datanya saja
             if cek_none_personal == False and cek_none_latar == False:
                 # Prediksi sensasi termal
-                data_prediksi_sensasi = data_personal_satu + \
-                    data_lb_satu+sensor_indoor+sensor_outdoor
-
+                data_prediksi_sensasi = [data_personal_satu + \
+                    data_lb_satu+sensor_indoor+sensor_outdoor]
+                
+                #Kalo modelnya ANN, data input dinormalisasi terlebih dahulu
+                if type(model_sensasi).__name__ == 'MLPClassifier':
+                    #print(data_prediksi_sensasi)
+                    data_prediksi_sensasi = scaler_sensasi.transform(data_prediksi_sensasi)
+                    #print(data_prediksi_sensasi)
+                    #print('Scaling...')
+                
+                elif type(model_sensasi).__name__ != 'MLPClassifier':
+                    pass
+                
                 output_sensasi = int(
-                    model_sensasi.predict([data_prediksi_sensasi]))
+                    model_sensasi.predict(data_prediksi_sensasi))
 
                 # Prediksi kenyamanan termal
-                data_prediksi_kenyamanan = data_personal_satu+[output_sensasi]
-
+                data_prediksi_kenyamanan = [data_personal_satu+[output_sensasi]]
+                
+                if type(model_kenyamanan).__name__ == 'MLPClassifier':
+                    data_prediksi_kenyamanan = scaler_kenyamanan.transform(data_prediksi_kenyamanan)
+                    #print('Scaling...')
+                    
+                elif type(model_kenyamanan).__name__ != 'MLPClassifier':
+                    pass
+                
                 output_kenyamanan = int(
-                    model_kenyamanan.predict([data_prediksi_kenyamanan]))
+                    model_kenyamanan.predict(data_prediksi_kenyamanan))
 
                 # Prediksi penerimaan termal
-                data_prediksi_penerimaan = data_personal_satu + \
-                    [output_sensasi]+[output_kenyamanan]
-
+                data_prediksi_penerimaan = [data_personal_satu + \
+                    [output_sensasi]+[output_kenyamanan]]
+                
+                if type(model_penerimaan).__name__ == 'MLPClassifier':
+                    data_prediksi_penerimaan = scaler_penerimaan.transform(data_prediksi_penerimaan)
+                    #print('Scaling...')
+                    
+                elif type(model_penerimaan).__name__ != 'MLPClassifier':
+                    pass
+                
                 output_penerimaan = int(
-                    model_penerimaan.predict([data_prediksi_penerimaan]))
+                    model_penerimaan.predict(data_prediksi_penerimaan))
 
                 # Masukin buat output akhir
                 prediksi_sensasi.append(output_sensasi)
