@@ -156,7 +156,7 @@ if __name__ == '__main__':
     )
     data_prediksi = preprocessing_dataprediksi.preprocess(data)
 
-    with open("assets/r33.pkl", 'rb') as sensasi:
+    with open("assets/r33_update.pkl", 'rb') as sensasi:
         model = pickle.load(sensasi)
 
         print("-" * 50)
