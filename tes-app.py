@@ -16,7 +16,7 @@ from helper import downloader
 
 
 def main(data, model):
-    status_nyaman = ''
+    status_nyaman = []
     # Ngambil data yang mau diprediksi
     data_personal = data['data_personal']
     data_latar_belakang=data['data_latar_belakang']
@@ -116,24 +116,28 @@ def main(data, model):
             1)/len(prediksi_penerimaan))*100
 
         if percentage_penerimaan >= 80:
-            status_nyaman = "Nyaman (%.2f %%)" % (percentage_penerimaan)
+            status_nyaman.append("Nyaman")
         elif 60 <= percentage_penerimaan < 80:
-            status_nyaman = "Netral (%.2f %%)" % (percentage_penerimaan)
+            status_nyaman.append("Netral") 
         elif percentage_penerimaan < 60:
-            status_nyaman = "Tidak nyaman (%.2f %%)" % (percentage_penerimaan)
+            status_nyaman.append("Tidak nyaman")
         print("Status = ", status_nyaman)
 
     #Jika tidak ada eror di orang dan/sensor
     elif not all(status) and status_model:
        
         error_msg=[i for i in range(len(status)) if status[i] == 0]
+        status_nyaman.append('No data')
         #print(error_msg)
         for error in error_msg:
-            if error == 0:        
+            if error == 0:
+                status_nyaman.append('Empty room')
                 print('No data : Empty room')
             elif error == 2:
+                status_nyaman.append('Indoor sensors')
                 print('No data : Indoor sensors')
             elif error == 3:
+                status_nyaman.append('Outdoor sensors')
                 print('No data : Outdoor sensors')
                 
     elif all(status) and not status_model:
