@@ -9,24 +9,29 @@ jobs:
   test:
     runs-on: ubuntu-18.04
     name: Test
+    strategy:
+      matrix: 
+        python-version: ["3.8"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         name: Setup Python
         with:
-          python-version: "3.8"
+          python-version: ${{ matrix.python-version }}
       
       - name: Cache pip lib
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
       
       - run: pip install --upgrade pip && pip install -r requirements.txt
         name: Install Dependency
+
+      - run: python tes_app.py
+        name: Running Program tes_app.py
+
       - run: python app.py
         name: Running Program app.py
-      - run: python tes_app.py
-        name: Running Program tes-app.py
