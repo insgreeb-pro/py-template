@@ -16,12 +16,13 @@ from helper import downloader
 
 
 def main(data, model):
-    status_nyaman = []
+    status_error = []
     # Ngambil data yang mau diprediksi
     data_personal = data['data_personal']
     data_latar_belakang=data['data_latar_belakang']
     sensor_indoor = data['sensor_indoor']
     sensor_outdoor = data['sensor_outdoor']
+    count_data_excluded = data['excluded_data']
     status_model = True
 
     # Cek semua kondisi data input ke model
@@ -36,7 +37,7 @@ def main(data, model):
     prediksi_sensasi = []
     prediksi_kenyamanan = []
     prediksi_penerimaan = []
-    count_data_excluded = 0
+    
 
     if all(status) and status_model:
         model_sensasi, model_kenyamanan, model_penerimaan,scaler = model
@@ -44,11 +45,11 @@ def main(data, model):
 
         data_dasar = list(zip(data_personal,data_latar_belakang))
         for data_personal_satu,data_lb_satu in data_dasar:            
-            cek_none_personal = any(x is None for x in data_personal_satu)
-            cek_none_latar = any(x is None for x in data_lb_satu)
+            #cek_none_personal = any(x is None for x in data_personal_satu)
+            #cek_none_latar = any(x is None for x in data_lb_satu)
 
             # Prediksi per orang yang ada di ruangan khusus yang ada datanya saja
-            if cek_none_personal == False and cek_none_latar == False:
+            #if cek_none_personal == False and cek_none_latar == False:
                 # Prediksi sensasi termal
                 data_prediksi_sensasi = [data_personal_satu + \
                     data_lb_satu+sensor_indoor+sensor_outdoor]
@@ -99,8 +100,8 @@ def main(data, model):
                 prediksi_penerimaan.append(output_penerimaan)
 
             # Yang datanya None, outputnya None juga
-            elif cek_none_personal or cek_none_latar:
-                count_data_excluded += 1
+            #elif cek_none_personal or cek_none_latar:
+             #   count_data_excluded += 1
 
         print('Prediksi sensasi = ', prediksi_sensasi)
         print('Prediksi kenyamanan = ', prediksi_kenyamanan)
@@ -116,28 +117,28 @@ def main(data, model):
             1)/len(prediksi_penerimaan))*100
 
         if percentage_penerimaan >= 80:
-            status_nyaman.append("Nyaman")
+            status_nyaman = "nyaman"
         elif 60 <= percentage_penerimaan < 80:
-            status_nyaman.append("Netral") 
+            status_nyaman = "netral" 
         elif percentage_penerimaan < 60:
-            status_nyaman.append("Tidak nyaman")
+            status_nyaman = "tidak nyaman"
         print("Status = ", status_nyaman)
 
     #Jika tidak ada eror di orang dan/sensor
     elif not all(status) and status_model:
        
         error_msg=[i for i in range(len(status)) if status[i] == 0]
-        status_nyaman.append('No data')
+        status_nyaman= 'error'
         #print(error_msg)
         for error in error_msg:
             if error == 0:
-                status_nyaman.append('Empty room')
+                status_error.append('Empty room')
                 print('No data : Empty room')
             elif error == 2:
-                status_nyaman.append('Indoor sensors')
+                status_error.append('Indoor sensors')
                 print('No data : Indoor sensors')
             elif error == 3:
-                status_nyaman.append('Outdoor sensors')
+                status_error.append('Outdoor sensors')
                 print('No data : Outdoor sensors')
                 
     elif all(status) and not status_model:
@@ -147,7 +148,8 @@ def main(data, model):
         "sensasi": prediksi_sensasi,
         "kenyamanan": prediksi_kenyamanan,
         "penerimaan": prediksi_penerimaan,
-        "status": status_nyaman
+        "status": status_nyaman,
+        "error": status_error,
     }, status_nyaman
 
 
