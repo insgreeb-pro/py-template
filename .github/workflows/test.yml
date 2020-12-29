@@ -28,5 +28,5 @@ jobs:
         name: Install Dependency
       - run: python app.py
         name: Running Program app.py
-      - run: python tes-app.py
+      - run: python tes_app.py
         name: Running Program tes-app.py

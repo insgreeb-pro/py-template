@@ -5,7 +5,8 @@ import schedule
 import time
 from sys import argv
 from helper import downloader
-import app
+import tes_app as app
+from preprocessing_dataprediksi import preprocess
 
 """
 command:
@@ -27,9 +28,10 @@ if __name__ == "__main__":
 
         def run():
             global data_input
-            data_input = json.loads(
+            raw = json.loads(
                 downloader.dataset(int(ID_RUANG))
             )
+            data_input = preprocess(raw)
             data_output, status = app.main(data_input, model)
             db.save_to_db(ID_TASK, status, data_input, data_output)
             db.upload(ID_RUANG, ID_TASK, status)
