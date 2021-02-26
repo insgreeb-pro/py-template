@@ -103,10 +103,10 @@ def main(data, model):
             #elif cek_none_personal or cek_none_latar:
              #   count_data_excluded += 1
 
-        print('Prediksi sensasi = ', prediksi_sensasi)
-        print('Prediksi kenyamanan = ', prediksi_kenyamanan)
-        print('Prediksi penerimaan = ', prediksi_penerimaan)
-        print('Total', count_data_excluded, 'data excluded')
+        # print('Prediksi sensasi = ', prediksi_sensasi)
+        # print('Prediksi kenyamanan = ', prediksi_kenyamanan)
+        # print('Prediksi penerimaan = ', prediksi_penerimaan)
+        # print('Total', count_data_excluded, 'data excluded')
 
         # Output akhir untuk thermal comfort level satu ruang
         # Parameter : Kenyamanan dan Penerimaan
@@ -122,7 +122,7 @@ def main(data, model):
             status_nyaman = "netral" 
         elif percentage_penerimaan < 60:
             status_nyaman = "tidak nyaman"
-        print("Status = ", status_nyaman)
+        # print("Status = ", status_nyaman)
 
     #Jika tidak ada eror di orang dan/sensor
     elif not all(status) and status_model:
@@ -133,16 +133,17 @@ def main(data, model):
         for error in error_msg:
             if error == 0:
                 status_error.append('Empty room')
-                print('No data : Empty room')
+                # print('No data : Empty room')
             elif error == 2:
                 status_error.append('Indoor sensors')
-                print('No data : Indoor sensors')
+                # print('No data : Indoor sensors')
             elif error == 3:
                 status_error.append('Outdoor sensors')
-                print('No data : Outdoor sensors')
+                # print('No data : Outdoor sensors')
                 
     elif all(status) and not status_model:
-        print('Model tidak ditemukan')
+        # print('Model tidak ditemukan')
+        pass
 
     return {
         "sensasi": prediksi_sensasi,
