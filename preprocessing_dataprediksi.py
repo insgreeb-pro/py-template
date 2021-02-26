@@ -1,7 +1,7 @@
 import json
 from dateutil import parser
 
-def preprocess(data):
+def preprocess(data, indoor_field_type=0):
     data_asal = json.loads("".join(open('assets/daerah.json').readlines()))
 
 
@@ -26,8 +26,10 @@ def preprocess(data):
     if status_indoor:
          # Atur data indoor
         # field1 = rhsht, ga dipake(?)
-        variabel_indoor = ['field2', 'field3',
-                           'field4', 'field5', 'field6', 'field7']
+        variabel_indoor = [
+            ['field2', 'field3', 'field4', 'field5', 'field6', 'field7'],
+            ['field1', 'field2', 'field3', 'field4', 'field5', 'field6']
+        ][indoor_field_type]
         sensor_indoor = []
         for variabel in variabel_indoor:
             data_indoor = float(data_sensor_indoor[variabel])

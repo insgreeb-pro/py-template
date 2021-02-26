@@ -1,4 +1,5 @@
 import urllib3
+import json
 from . import BASE_API_GATEWAY, BASE_API_SERVER
 
 
@@ -15,3 +16,9 @@ def model(id_model: int):
     urlPath = "/api/model/download?id=%s" % id_model
     req = http.request("GET", BASE_API_GATEWAY + urlPath)
     return req.data
+
+def validation_data(ruang: int, date_start: str, date_end: str):
+    http = urllib3.PoolManager()
+    urlPath = "/api/kuis/result?ruang=%s&start_date=%s&end_date=%s" % (ruang, date_start, date_end)
+    req = http.request('GET', BASE_API_GATEWAY + urlPath)
+    return json.loads(req.data)['surveys']
