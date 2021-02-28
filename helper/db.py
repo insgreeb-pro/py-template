@@ -5,6 +5,10 @@ from . import BASE_API_SERVER, BASE_API_GATEWAY, env
 
 
 def save_to_db(id_task, status, input_data, output_data):
+    """
+    Deprecated
+    reason: result tidak perlu disimpan lagi
+    """
     http = urllib3.PoolManager()
     url = BASE_API_GATEWAY + "/api/ai/new-result"
     data = {

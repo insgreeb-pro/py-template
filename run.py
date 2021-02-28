@@ -33,7 +33,6 @@ if __name__ == "__main__":
             )
             data_input = preprocess(raw)
             data_output, status = app.main(data_input, model)
-            db.save_to_db(ID_TASK, status, data_input, data_output)
             
             comfort_status = processing.calculateComfort(data_output)
             db.upload(ID_RUANG, ID_TASK, comfort_status)
