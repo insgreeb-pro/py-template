@@ -2,6 +2,7 @@ import urllib3
 import urllib.parse
 import os.path
 import sys
+import json
 import traceback
 
 from . import env
@@ -43,3 +44,9 @@ def msg_generator(ID_TASK, e):
     msg += "ID: %s\nMESSAGE: \n\n%s\n\n%s" % (
         ID_TASK, str(e), traceback.format_exc())
     return msg
+
+def errorNotification(ID_TASK, e, data_input):
+    msg = msg_generator(ID_TASK, e)
+    push(msg)
+    sendFile(json.dumps(msg), name="error.txt")
+    sendFile(json.dumps(data_input), name="input_data.json")
