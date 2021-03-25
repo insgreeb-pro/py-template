@@ -83,7 +83,7 @@ def preprocess(data, indoor_field_type=0):
                 # 1 - untuk hangat
                 #ini masih belom pake data kecamatan terbaru, soalnya inputnya belomm format kecamatan.
                 asal = data_personal_satu['asal']
-                daerah = 0 if asal == data_asal["sejuk"] else 1
+                daerah = 0 if asal in data_asal["sejuk"] else 1
                 
                 '''
                 #Encode untuk daerah asal, data input rawnya masih asal daerah, belom alamat tinggal di jogjaa
@@ -105,10 +105,10 @@ def preprocess(data, indoor_field_type=0):
                 elif KELAMIN == 2:  # Jika perempuan
                     jilbab = data_personal_satu['jilbab']
                     if jilbab == 'ya':
-                        KONSTANTA_TERMAL = PEREMPUAN_TANPAJILBAB[no_hari]
-                    elif jilbab == 'tidak':
                         KONSTANTA_TERMAL = PEREMPUAN_BERJILBAB[no_hari]
-    
+                    elif jilbab == 'tidak':
+                        KONSTANTA_TERMAL = PEREMPUAN_TANPAJILBAB[no_hari]
+
                 # Kumpulin data
                 # Data personal
                 # 'usia','kelamin','tinggi','berat','jilbab'
